@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -8,9 +9,8 @@ final GoogleSignIn googleSignIn = GoogleSignIn();
 String name;
 String email;
 String imageUrl;
-String isloggedin = 'false';
 
-Future<Map> signInWithGoogle() async {
+Future<String> signInWithGoogle() async {
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
@@ -32,8 +32,6 @@ Future<Map> signInWithGoogle() async {
   email = user.email;
   imageUrl = user.photoUrl;
 
-  print('$imageUrl');
-
   // Only taking the first part of the name, i.e., First Name
   // if (name.contains(" ")) {
   //   name = name.substring(0, name.indexOf(" "));
@@ -44,18 +42,19 @@ Future<Map> signInWithGoogle() async {
 
   final FirebaseUser currentUser = await _auth.currentUser();
   assert(user.uid == currentUser.uid);
-  print(currentUser.uid);
 
-  return {
-    'Key': '$user',
-    'name': '$name',
-    'email': '$email',
-    'imageUrl': '$imageUrl'
-  };
+  Firestore.instance
+      .collection('users')
+      .document(currentUser.uid)
+      .setData({'name': '$name', 'url': '$imageUrl', 'email': '$email'});
+  return '$user';
 }
 
 void signOutGoogle() async {
   await googleSignIn.signOut();
+  name = null;
+  email = null;
+  imageUrl = null;
 
   print("User Sign Out");
 }

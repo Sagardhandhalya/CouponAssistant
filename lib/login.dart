@@ -46,6 +46,7 @@
 
 import 'package:flutter/material.dart';
 import './services/sign_in.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -79,7 +80,10 @@ class _LoginState extends State<Login> {
       splashColor: Colors.grey,
       onPressed: () {
         signInWithGoogle().whenComplete(() {
-          Navigator.pop(context);
+          Navigator.of(context)
+              .push(new MaterialPageRoute(builder: (BuildContext context) {
+            return Home();
+          }));
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),

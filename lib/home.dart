@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('Coupon Assistant'),
       ),
-      drawer: (isloggedin == true) ? UserDrawer() : NormalDrawer(),
+      drawer: (imageUrl != null) ? UserDrawer() : NormalDrawer(),
       body: StreamBuilder(
         stream: Firestore.instance.collection('general coupons').snapshots(),
         builder: (context, snapshot) {

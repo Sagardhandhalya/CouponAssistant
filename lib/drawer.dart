@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './services/sign_in.dart';
+import 'home.dart';
 
 class UserDrawer extends StatelessWidget {
   @override
@@ -13,8 +14,11 @@ class UserDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(imageUrl),
+            child: Center(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(imageUrl),
+              ),
             ),
             decoration: BoxDecoration(
               color: Colors.blue,
@@ -29,6 +33,10 @@ class UserDrawer extends StatelessWidget {
             title: Text('Sign Out'),
             onTap: () {
               signOutGoogle();
+              Navigator.of(context)
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                return Home();
+              }));
             },
           ),
           ListTile(

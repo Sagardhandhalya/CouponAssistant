@@ -70,7 +70,7 @@ class _PcouponState extends State<Pcoupon> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      doc['discount'],
+                      doc['discount'] + "% OFF",
                       style: TextStyle(
                           fontSize: 40,
                           color: Colors.blue[400],

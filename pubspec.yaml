@@ -28,6 +28,8 @@ dependencies:
   cloud_firestore:
   firebase_auth: ^0.15.2
   google_sign_in: ^4.0.4
+  datetime_picker_formfield: ^1.0.0
+  date_format: ^1.0.8
 
 dev_dependencies:
   flutter_test:

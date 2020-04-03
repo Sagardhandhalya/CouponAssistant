@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './services/sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class AddCoupon extends StatefulWidget {
   @override
@@ -47,32 +48,80 @@ class _AddCouponState extends State<AddCoupon> {
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) {
                       this._data.company = value;
+                    },
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
                     }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: 'Zomato',
                         labelText: 'Enter company or Brand name')),
                 new TextFormField(
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                     onSaved: (String value) {
                       this._data.coupon_code = value;
                     }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: 'Zomato45', labelText: 'Enter Coupon code')),
+                // DateTimeField(
+                //   format: format,
+                //   decoration: new InputDecoration(
+                //       hintText: '2020-01-25',
+                //       labelText: 'Enter Expiry date of the coupon'),
+                //   onShowPicker: (context, currentValue) {
+                //     return showDatePicker(
+                //         context: context,
+                //         firstDate: DateTime.now(),
+                //         initialDate: currentValue ?? DateTime.now(),
+                //         lastDate: DateTime(2100));
+                //   },
+
+                //   onSaved : (formatDate(value, [yyyy, '-', mm, '-', dd])) {
+                //     this._data.exp_date =
+                //         formatDate(value, [yyyy, '-', mm, '-', dd]);
+                //   },
+                // ),
                 new TextFormField(
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                     onSaved: (String value) {
                       this._data.exp_date = value;
                     }, // Use email input type for emails.
                     decoration: new InputDecoration(
-                        hintText: '3 june, 2020',
-                        labelText: 'Enter Expiry dformate of the coupon')),
+                        hintText: '2020-04-15',
+                        labelText: 'Enter Expiry date of the coupon')),
                 new TextFormField(
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: (String value) {
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    onSaved: (value) {
                       this._data.discount = value;
-                    }, // Use email input type for emails.
+                    },
+                    // onSaved: (int value) {
+                    //   this._data.discount = value;
+                    // }, // Use email input type for emails.
                     decoration: new InputDecoration(
-                        hintText: '55 % OFF',
+                        hintText: '55 ( * in %)',
                         labelText: 'Enter discount here')),
                 new TextFormField(
                     keyboardType: TextInputType.emailAddress,
@@ -80,16 +129,16 @@ class _AddCouponState extends State<AddCoupon> {
                       this._data.t_c = value;
                     }, // Use email input type for emails.
                     decoration: new InputDecoration(
-                        hintText: 'should only use on on site.',
+                        hintText: 'terms and conditions...',
                         labelText: 'Enter terms and conditions ')),
                 new TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) {
                       this._data.other_details = value;
-                    }, // Use email input type for emails.
+                    },
+                    // Use email input type for emails.
                     decoration: new InputDecoration(
-                        hintText:
-                            'have to go there first, you can use only for two people...',
+                        hintText: 'other details...',
                         labelText: 'Enter other details here ')),
                 new Container(
                   width: screenSize.width,
@@ -99,22 +148,25 @@ class _AddCouponState extends State<AddCoupon> {
                       style: new TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      this._formKey.currentState.save();
-                      print(_data);
-                      Firestore.instance
-                          .collection('users')
-                          .document(current_user_id)
-                          .collection('personal_coupon')
-                          .document()
-                          .setData({
-                        'company': _data.company,
-                        'coupon_code': _data.coupon_code,
-                        'exp_date': _data.exp_date,
-                        'discount': _data.discount,
-                        'other_details': _data.other_details,
-                        't_c': _data.t_c
-                      });
-                      Navigator.pop(context);
+                      if (this._formKey.currentState.validate()) {
+                        this._formKey.currentState.save();
+
+                        //print(_data.discount);
+                        Firestore.instance
+                            .collection('users')
+                            .document(current_user_id)
+                            .collection('personal_coupon')
+                            .document()
+                            .setData({
+                          'company': _data.company,
+                          'coupon_code': _data.coupon_code,
+                          'exp_date': _data.exp_date,
+                          'discount': _data.discount,
+                          'other_details': _data.other_details,
+                          't_c': _data.t_c
+                        });
+                        Navigator.pop(context);
+                      }
                     },
                     color: Colors.redAccent,
                   ),

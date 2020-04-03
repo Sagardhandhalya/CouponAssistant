@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OneCoupon extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _OneCouponState extends State<OneCoupon> {
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      data['discount'],
+                      data['discount'] + '% OFF',
                       style: TextStyle(
                           fontSize: 45,
                           color: Colors.red,
@@ -62,13 +63,19 @@ class _OneCouponState extends State<OneCoupon> {
                       data['coupon_code'],
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.content_copy,
-                        color: Colors.blue,
-                      ),
-                      onPressed: () {},
-                    )
+                    Material(
+                        color: Colors.transparent,
+                        shape: CircleBorder(),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.content_copy,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: data['coupon_code']));
+                          },
+                        ))
                   ],
                 ),
                 SizedBox(height: 15),

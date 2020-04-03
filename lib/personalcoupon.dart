@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import './drawer.dart';
+
 import './services/sign_in.dart';
 
-class Home extends StatefulWidget {
+class Pcoupon extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _PcouponState createState() => _PcouponState();
 }
 
 const spinkit = SpinKitRotatingCircle(
@@ -14,7 +14,7 @@ const spinkit = SpinKitRotatingCircle(
   size: 50.0,
 );
 
-class _HomeState extends State<Home> {
+class _PcouponState extends State<Pcoupon> {
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
       onTap: () {
@@ -33,9 +33,7 @@ class _HomeState extends State<Home> {
           margin: EdgeInsets.all(10),
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              color: (int.parse(doc['id']) % 2 == 0)
-                  ? Colors.blue[400]
-                  : Colors.yellow[400],
+              color: Colors.yellow[400],
               //blurRadius: 1.0, // has the effect of softening the shadow
               spreadRadius: 10.0, // has the effect of extending the shadow
             )
@@ -75,9 +73,7 @@ class _HomeState extends State<Home> {
                       doc['discount'],
                       style: TextStyle(
                           fontSize: 40,
-                          color: (int.parse(doc['id']) % 2 == 0)
-                              ? Colors.yellow[400]
-                              : Colors.blue[400],
+                          color: Colors.blue[400],
                           fontWeight: FontWeight.w300),
                     ),
                     Column(children: <Widget>[
@@ -85,9 +81,7 @@ class _HomeState extends State<Home> {
                         'Expiry date',
                         style: TextStyle(
                             fontSize: 15,
-                            color: (int.parse(doc['id']) % 2 == 0)
-                                ? Colors.yellow[400]
-                                : Colors.blue[400],
+                            color: Colors.blue[400],
                             fontWeight: FontWeight.w500),
                       ),
                       SizedBox(height: 5),
@@ -95,9 +89,7 @@ class _HomeState extends State<Home> {
                         doc['exp_date'],
                         style: TextStyle(
                             fontSize: 18,
-                            color: (int.parse(doc['id']) % 2 == 0)
-                                ? Colors.yellow[400]
-                                : Colors.blue[400],
+                            color: Colors.blue[400],
                             fontWeight: FontWeight.w500),
                       ),
                     ])
@@ -112,14 +104,25 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    print(current_user_id);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Genral Coupon'),
+        title: Text('Your Coupons'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(
+                Icons.camera_alt,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/click');
+              })
+        ],
       ),
-      drawer: (current_user_id == null) ? NormalDrawer() : UserDrawer(),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('general coupons').snapshots(),
+        stream: Firestore.instance
+            .collection('users')
+            .document(current_user_id)
+            .collection('personal_coupon')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -134,6 +137,25 @@ class _HomeState extends State<Home> {
           );
         },
       ),
+      bottomNavigationBar: new BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.menu, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: Icon(Icons.add, size: 30),
+        onPressed: () {
+          Navigator.pushNamed(context, '/add');
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

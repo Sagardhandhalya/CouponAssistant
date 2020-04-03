@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import './services/sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddCoupon extends StatefulWidget {
   @override
@@ -27,6 +27,8 @@ class _CouponData {
 class _AddCouponState extends State<AddCoupon> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
+  _CouponData _data = new _CouponData();
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -42,37 +44,49 @@ class _AddCouponState extends State<AddCoupon> {
             child: new ListView(
               children: <Widget>[
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.company = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: 'Zomato',
                         labelText: 'Enter company or Brand name')),
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.coupon_code = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: 'Zomato45', labelText: 'Enter Coupon code')),
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.exp_date = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: '3 june, 2020',
-                        labelText: 'Enter Expiry date of the coupon')),
+                        labelText: 'Enter Expiry dformate of the coupon')),
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.discount = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: '55 % OFF',
                         labelText: 'Enter discount here')),
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.t_c = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText: 'should only use on on site.',
                         labelText: 'Enter terms and conditions ')),
                 new TextFormField(
-                    keyboardType: TextInputType
-                        .emailAddress, // Use email input type for emails.
+                    keyboardType: TextInputType.emailAddress,
+                    onSaved: (String value) {
+                      this._data.other_details = value;
+                    }, // Use email input type for emails.
                     decoration: new InputDecoration(
                         hintText:
                             'have to go there first, you can use only for two people...',
@@ -85,6 +99,21 @@ class _AddCouponState extends State<AddCoupon> {
                       style: new TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
+                      this._formKey.currentState.save();
+                      print(_data);
+                      Firestore.instance
+                          .collection('users')
+                          .document(current_user_id)
+                          .collection('personal_coupon')
+                          .document()
+                          .setData({
+                        'company': _data.company,
+                        'coupon_code': _data.coupon_code,
+                        'exp_date': _data.exp_date,
+                        'discount': _data.discount,
+                        'other_details': _data.other_details,
+                        't_c': _data.t_c
+                      });
                       Navigator.pop(context);
                     },
                     color: Colors.redAccent,

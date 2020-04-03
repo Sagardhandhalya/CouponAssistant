@@ -26,6 +26,17 @@ class UserDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
+              Icons.monetization_on,
+              size: 40,
+              color: Colors.blueAccent,
+            ),
+            title: Text('Your Coupon'),
+            onTap: () {
+              Navigator.pushNamed(context, '/yourcoupon');
+            },
+          ),
+          ListTile(
+            leading: Icon(
               Icons.account_circle,
               size: 40,
               color: Colors.blueAccent,
@@ -37,6 +48,7 @@ class UserDrawer extends StatelessWidget {
                   .push(new MaterialPageRoute(builder: (BuildContext context) {
                 return Home();
               }));
+              //Navigator.pushNamed(context, '/home');
             },
           ),
           ListTile(

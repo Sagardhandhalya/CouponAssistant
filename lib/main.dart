@@ -6,6 +6,8 @@ import './login.dart';
 import './feedback.dart';
 import './settings.dart';
 import './addcoupon.dart';
+import './clickcoupon.dart';
+import './personalcoupon.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -17,7 +19,9 @@ void main() => runApp(MaterialApp(
         '/onecoupon': (context) => OneCoupon(),
         '/feed': (context) => Feed(),
         '/set': (context) => Settings(),
-        '/add': (context) => AddCoupon()
+        '/add': (context) => AddCoupon(),
+        '/click': (context) => ClickCoupon(),
+        '/yourcoupon': (context) => Pcoupon(),
       },
       theme: basicTheme(),
     ));

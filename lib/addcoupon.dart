@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './services/sign_in.dart';
+import './home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
@@ -154,7 +154,7 @@ class _AddCouponState extends State<AddCoupon> {
                         //print(_data.discount);
                         Firestore.instance
                             .collection('users')
-                            .document(current_user_id)
+                            .document(userId)
                             .collection('personal_coupon')
                             .document()
                             .setData({

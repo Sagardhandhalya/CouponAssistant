@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './drawer.dart';
-import './services/sign_in.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+String userId = '';
 
 class Home extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ const spinkit = SpinKitRotatingCircle(
 );
 
 class _HomeState extends State<Home> {
+  bool isloggedin = false;
+
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
       onTap: () {
@@ -72,7 +76,7 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      doc['discount'],
+                      doc['discount'] + '%OFF',
                       style: TextStyle(
                           fontSize: 40,
                           color: (int.parse(doc['id']) % 2 == 0)
@@ -110,14 +114,25 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void _loaduser() async {
+    final storage = FlutterSecureStorage();
+    userId = await storage.read(key: 'user_id');
+
+    if (userId != null) {
+      setState(() {
+        isloggedin = true;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(current_user_id);
+    _loaduser();
     return Scaffold(
       appBar: AppBar(
         title: Text('Genral Coupon'),
       ),
-      drawer: (current_user_id == null) ? NormalDrawer() : UserDrawer(),
+      drawer: isloggedin ? UserDrawer() : NormalDrawer(),
       body: StreamBuilder(
         stream: Firestore.instance.collection('general coupons').snapshots(),
         builder: (context, snapshot) {

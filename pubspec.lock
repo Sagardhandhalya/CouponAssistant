@@ -148,6 +148,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  firebase_ml_vision:
+    dependency: "direct main"
+    description:
+      name: firebase_ml_vision
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.3+8"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -160,6 +167,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.4"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  flutter_secure_storage:
+    dependency: "direct main"
+    description:
+      name: flutter_secure_storage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.1+1"
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -219,6 +240,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.4"
   intl:
     dependency: transitive
     description:
@@ -287,6 +315,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_star_rating:
+    dependency: "direct main"
+    description:
+      name: smooth_star_rating
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4+2"
   source_span:
     dependency: transitive
     description:

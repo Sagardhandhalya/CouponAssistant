@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
-import '../drawer.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final _storage = FlutterSecureStorage();
 
 String name;
 String email;
@@ -34,6 +35,10 @@ Future<String> signInWithGoogle() async {
   email = user.email;
   imageUrl = user.photoUrl;
 
+  await _storage.write(key: 'name', value: user.displayName);
+  await _storage.write(key: 'email', value: user.email);
+  await _storage.write(key: 'imageUrl', value: user.photoUrl);
+
   // Only taking the first part of the name, i.e., First Name
   // if (name.contains(" ")) {
   //   name = name.substring(0, name.indexOf(" "));
@@ -46,6 +51,7 @@ Future<String> signInWithGoogle() async {
   assert(user.uid == currentUser.uid);
 
   current_user_id = currentUser.uid;
+  await _storage.write(key: 'user_id', value: current_user_id);
 
   Firestore.instance
       .collection('users')
@@ -57,7 +63,10 @@ Future<String> signInWithGoogle() async {
 void signOutGoogle() async {
   await googleSignIn.signOut();
 
-  current_user_id = null;
+  await _storage.delete(key: 'user_id');
+   await _storage.delete(key: 'name');
+    await _storage.delete(key: 'email');
+     await _storage.delete(key: 'imageUrl');
 
   print("User Sign Out");
 }

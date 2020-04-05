@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
 import './services/sign_in.dart';
 import 'home.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class UserDrawer extends StatelessWidget {
+class UserDrawer extends StatefulWidget {
+  @override
+  _UserDrawerState createState() => _UserDrawerState();
+}
+
+class _UserDrawerState extends State<UserDrawer> {
+  String imageUrl = '';
+
+  void _loadurl() async {
+    final storage = FlutterSecureStorage();
+    String url = await storage.read(key: 'imageUrl');
+
+    if (url != null) {
+      setState(() {
+        imageUrl = url;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _loadurl();
     return Drawer(
       // Add a ListView to the drawer. This ensures the user can scroll
       // through the options in the drawer if there isn't enough vertical
@@ -30,7 +50,7 @@ class UserDrawer extends StatelessWidget {
               size: 40,
               color: Colors.blueAccent,
             ),
-            title: Text('Your Coupon'),
+            title: Text('My Coupon'),
             onTap: () {
               Navigator.pushNamed(context, '/yourcoupon');
             },
@@ -48,7 +68,8 @@ class UserDrawer extends StatelessWidget {
                   .push(new MaterialPageRoute(builder: (BuildContext context) {
                 return Home();
               }));
-              //Navigator.pushNamed(context, '/home');
+              // Navigator.pushNamed(context, '/feed');
+              // Navigator.pushNamed(context, '/home');
             },
           ),
           ListTile(

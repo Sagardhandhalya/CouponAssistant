@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import './services/sign_in.dart';
+import './home.dart';
 
 class Pcoupon extends StatefulWidget {
   @override
@@ -104,6 +104,7 @@ class _PcouponState extends State<Pcoupon> {
 
   @override
   Widget build(BuildContext context) {
+    print(userId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Coupons'),
@@ -120,7 +121,7 @@ class _PcouponState extends State<Pcoupon> {
       body: StreamBuilder(
         stream: Firestore.instance
             .collection('users')
-            .document(current_user_id)
+            .document(userId)
             .collection('personal_coupon')
             .snapshots(),
         builder: (context, snapshot) {

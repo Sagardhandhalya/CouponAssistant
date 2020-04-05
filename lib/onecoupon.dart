@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import './services/sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OneCoupon extends StatefulWidget {
   @override
@@ -7,6 +9,7 @@ class OneCoupon extends StatefulWidget {
 }
 
 class _OneCouponState extends State<OneCoupon> {
+  bool isOpen = false;
   Map data = {};
   Widget build(BuildContext context) {
     data = ModalRoute.of(context).settings.arguments;
@@ -14,7 +17,7 @@ class _OneCouponState extends State<OneCoupon> {
         appBar: AppBar(
           title: Text('Coupon details'),
         ),
-        body: Column(children: <Widget>[
+        body: ListView(children: <Widget>[
           Container(
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -121,6 +124,11 @@ class _OneCouponState extends State<OneCoupon> {
                   'T & C',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
+                onPressed: () {
+                  setState(() {
+                    isOpen = !isOpen;
+                  });
+                },
               ),
               RaisedButton(
                 shape: RoundedRectangleBorder(
@@ -129,9 +137,23 @@ class _OneCouponState extends State<OneCoupon> {
                   'Delete coupon',
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
+                onPressed: () {},
               ),
             ],
           ),
+          isOpen
+              ? Container(
+                  margin: EdgeInsets.all(10),
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    color: Colors.yellow[200],
+                  ),
+                  child: Center(
+                    child: Text(data['t_c'],
+                        style: TextStyle(fontSize: 15, color: Colors.black)),
+                  ))
+              : Container()
         ]));
   }
 }

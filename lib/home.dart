@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-String userId = '';
+String userId = 'user';
 
 class Home extends StatefulWidget {
   @override
@@ -12,12 +12,13 @@ class Home extends StatefulWidget {
 }
 
 const spinkit = SpinKitRotatingCircle(
-  color: Colors.redAccent,
+  color: Colors.green,
   size: 50.0,
 );
 
 class _HomeState extends State<Home> {
   bool isloggedin = false;
+  String sortby = "discount";
 
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
@@ -28,31 +29,29 @@ class _HomeState extends State<Home> {
           'discount': doc['discount'],
           'coupon_code': doc['coupon_code'],
           't_c': doc['t_c'],
-          'other_details': doc['other_details']
+          'other_details': doc['other_details'],
+          'personal': false
         });
       },
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
         child: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.all(5),
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              color: (int.parse(doc['id']) % 2 == 0)
-                  ? Colors.blue[400]
-                  : Colors.yellow[400],
-              //blurRadius: 1.0, // has the effect of softening the shadow
-              spreadRadius: 10.0, // has the effect of extending the shadow
-            )
+              color: Colors.orange[50],
+
+              spreadRadius: 5.0, // has the effect of extending the shadow
+            ),
           ], borderRadius: BorderRadius.circular(20)),
           child: Column(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.red[400],
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.red[400],
+                        color: Colors.blue[200],
                         //blurRadius: 1.0, // has the effect of softening the shadow
                         spreadRadius:
                             10.0, // has the effect of extending the shadow
@@ -64,49 +63,38 @@ class _HomeState extends State<Home> {
                       Text(
                         doc['company'],
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 20,
                             color: Colors.white,
                             fontWeight: FontWeight.w700),
                       )
                     ]),
               ),
               SizedBox(height: 30),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      doc['discount'] + '%OFF',
-                      style: TextStyle(
-                          fontSize: 40,
-                          color: (int.parse(doc['id']) % 2 == 0)
-                              ? Colors.yellow[400]
-                              : Colors.blue[400],
-                          fontWeight: FontWeight.w300),
-                    ),
-                    Column(children: <Widget>[
-                      Text(
-                        'Expiry date',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: (int.parse(doc['id']) % 2 == 0)
-                                ? Colors.yellow[400]
-                                : Colors.blue[400],
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        doc['exp_date'],
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: (int.parse(doc['id']) % 2 == 0)
-                                ? Colors.yellow[400]
-                                : Colors.blue[400],
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ])
-                  ]),
-              SizedBox(height: 10),
+              Column(children: <Widget>[
+                Text(
+                  doc['discount'] + '%OFF',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Expiry date',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  doc['exp_date'],
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+              ]),
             ],
           ),
         ),
@@ -122,6 +110,10 @@ class _HomeState extends State<Home> {
       setState(() {
         isloggedin = true;
       });
+    } else {
+      setState(() {
+        isloggedin = false;
+      });
     }
   }
 
@@ -130,11 +122,61 @@ class _HomeState extends State<Home> {
     _loaduser();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Genral Coupon'),
+        title: Text('General Coupon'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.sort),
+              onPressed: () {
+                setState(() {
+                  if (sortby == "exp_date") {
+                    sortby = "discount";
+                  } else {
+                    sortby = "exp_date";
+                  }
+                });
+              })
+        ],
       ),
       drawer: isloggedin ? UserDrawer() : NormalDrawer(),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('general coupons').snapshots(),
+        stream: Firestore.instance
+            .collection("general coupons")
+            .orderBy(sortby, descending: false)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: spinkit,
+            );
+          }
+          return GridView.count(
+            // Create a grid with 2 columns. If you change the scrollDirection to
+            // horizontal, this produces 2 rows.
+            crossAxisCount: 2,
+            // Generate 100 widgets that display their index in the List.
+            children: List.generate(snapshot.data.documents.length, (index) {
+              return _buildcoupon(context, snapshot.data.documents[index]);
+            }),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/*
+ Widget build(BuildContext context) {
+    _loaduser();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('General Coupon'),
+      ),
+      drawer: isloggedin ? UserDrawer() : NormalDrawer(),
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection("general coupons")
+            .orderBy("exp_date", descending: false)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -151,4 +193,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
+*/

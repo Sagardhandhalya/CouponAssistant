@@ -1,0 +1,27 @@
+--= meeting =--
+
+Why to choose flutter 
+1. Fast
+2.compile direct to android
+3.For both plate form android & Ios
+4.Native is good for HTML,CSS,JS
+5.it has a loat off plugins avalable for that prewrite 
+    can direct function from them.
+
+
+Why to choose Firebase :
+
+1. Firebase is full backend solution provide every thing for authentication , database , Ml kit alse
+
+2. Firebase has oauth framwork for authentication  Ex. How oauth work...
+
+3. I use ml kit from Firebase
+
+4. Pricing is very 50k read/day  and 20k write/day
+
+5.it can done job without internet
+
+6.For clould notifications 
+
+
+=> Very useful class diagrame and 

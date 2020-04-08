@@ -24,23 +24,17 @@ class _FeedState extends State<Feed> {
         padding: const EdgeInsets.all(10.0),
         child: ListView(children: <Widget>[
           SizedBox(height: 100),
-          Text(
-            'Rate our App :',
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
           SizedBox(height: 20),
           Center(
             child: SmoothStarRating(
               rating: rating,
-              size: 30,
+              size: 40,
               filledIconData: Icons.star,
               halfFilledIconData: Icons.star_half,
               defaultIconData: Icons.star_border,
               starCount: 5,
               allowHalfRating: false,
-              spacing: 1.0,
+              spacing: 2.0,
               onRatingChanged: (value) {
                 setState(() {
                   rating = value;
@@ -58,27 +52,30 @@ class _FeedState extends State<Feed> {
             },
           ),
           SizedBox(height: 50),
-          RaisedButton(
-            focusColor: Colors.blue,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Text(
-              'Submit',
-              style: TextStyle(fontSize: 20, color: Colors.white),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: RaisedButton(
+              color: Theme.of(context).indicatorColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              child: Text(
+                'Submit',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onPressed: () {
+                print(comment);
+                Firestore.instance
+                    .collection('users')
+                    .document(userId)
+                    .collection('feedback')
+                    .document()
+                    .setData({
+                  'rating': rating,
+                  'feedback': comment,
+                });
+                Navigator.pop(context);
+              },
             ),
-            onPressed: () {
-              print(comment);
-              Firestore.instance
-                  .collection('users')
-                  .document(userId)
-                  .collection('feedback')
-                  .document()
-                  .setData({
-                'rating': rating,
-                'feedback': comment,
-              });
-              Navigator.pop(context);
-            },
           ),
         ]),
       ),

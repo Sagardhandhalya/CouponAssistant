@@ -10,7 +10,7 @@ class Pcoupon extends StatefulWidget {
 }
 
 const spinkit = SpinKitRotatingCircle(
-  color: Colors.redAccent,
+  color: Colors.green,
   size: 50.0,
 );
 
@@ -24,29 +24,30 @@ class _PcouponState extends State<Pcoupon> {
           'discount': doc['discount'],
           'coupon_code': doc['coupon_code'],
           't_c': doc['t_c'],
-          'other_details': doc['other_details']
+          'other_details': doc['other_details'],
+          'personal': true,
+          'id': doc.documentID
         });
       },
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
         child: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.all(5),
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
-              color: Colors.yellow[400],
-              //blurRadius: 1.0, // has the effect of softening the shadow
-              spreadRadius: 10.0, // has the effect of extending the shadow
-            )
+              color: Colors.orange[50],
+
+              spreadRadius: 5.0, // has the effect of extending the shadow
+            ),
           ], borderRadius: BorderRadius.circular(20)),
           child: Column(
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.red[400],
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.red[400],
+                        color: Colors.blue[200],
                         //blurRadius: 1.0, // has the effect of softening the shadow
                         spreadRadius:
                             10.0, // has the effect of extending the shadow
@@ -58,43 +59,40 @@ class _PcouponState extends State<Pcoupon> {
                       Text(
                         doc['company'],
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 20,
                             color: Colors.white,
                             fontWeight: FontWeight.w700),
                       )
                     ]),
               ),
               SizedBox(height: 30),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      doc['discount'] + "% OFF",
-                      style: TextStyle(
-                          fontSize: 40,
-                          color: Colors.blue[400],
-                          fontWeight: FontWeight.w300),
-                    ),
-                    Column(children: <Widget>[
-                      Text(
-                        'Expiry date',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.blue[400],
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        doc['exp_date'],
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.blue[400],
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ])
-                  ]),
-              SizedBox(height: 10),
+              Column(children: <Widget>[
+                Text(
+                  doc['discount'].indexOf('%') == -1
+                      ? '${doc['discount']}% OFF'
+                      : '${doc['discount']} OFF',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Expiry date',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  doc['exp_date'],
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+              ]),
             ],
           ),
         ),
@@ -102,20 +100,24 @@ class _PcouponState extends State<Pcoupon> {
     );
   }
 
+  String sortby = 'exp_date';
   @override
   Widget build(BuildContext context) {
-    print(userId);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Coupons'),
         actions: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.camera_alt,
-              ),
+              icon: Icon(Icons.sort),
               onPressed: () {
-                Navigator.pushNamed(context, '/click');
-              })
+                setState(() {
+                  if (sortby == "exp_date") {
+                    sortby = "discount";
+                  } else {
+                    sortby = "exp_date";
+                  }
+                });
+              }),
         ],
       ),
       body: StreamBuilder(
@@ -123,6 +125,7 @@ class _PcouponState extends State<Pcoupon> {
             .collection('users')
             .document(userId)
             .collection('personal_coupon')
+            .orderBy(sortby, descending: false)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -130,14 +133,25 @@ class _PcouponState extends State<Pcoupon> {
               child: spinkit,
             );
           }
-          return ListView.builder(
+          return GridView.count(
+            // Create a grid with 2 columns. If you change the scrollDirection to
+            // horizontal, this produces 2 rows.
+            crossAxisCount: 2,
+            // Generate 100 widgets that display their index in the List.
+            children: List.generate(snapshot.data.documents.length, (index) {
+              return _buildcoupon(context, snapshot.data.documents[index]);
+            }),
+          );
+        },
+      ),
+      /*
+       return ListView.builder(
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               return _buildcoupon(context, snapshot.data.documents[index]);
             },
           );
-        },
-      ),
+      */
       bottomNavigationBar: new BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: new Row(
@@ -153,7 +167,7 @@ class _PcouponState extends State<Pcoupon> {
       floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.add, size: 30),
         onPressed: () {
-          Navigator.pushNamed(context, '/add');
+          Navigator.pushNamed(context, '/option');
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

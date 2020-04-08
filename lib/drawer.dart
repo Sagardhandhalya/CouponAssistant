@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import './services/sign_in.dart';
 import 'home.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+void _launchURL() async {
+  const url = 'https://www.websitepolicies.com/policies/view/eicF0v14';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
 
 class UserDrawer extends StatefulWidget {
   @override
@@ -10,14 +20,17 @@ class UserDrawer extends StatefulWidget {
 
 class _UserDrawerState extends State<UserDrawer> {
   String imageUrl = '';
+  String name = 'User';
 
   void _loadurl() async {
     final storage = FlutterSecureStorage();
     String url = await storage.read(key: 'imageUrl');
+    String nam = await storage.read(key: 'name');
 
     if (url != null) {
       setState(() {
         imageUrl = url;
+        name = nam;
       });
     }
   }
@@ -25,6 +38,7 @@ class _UserDrawerState extends State<UserDrawer> {
   @override
   Widget build(BuildContext context) {
     _loadurl();
+
     return Drawer(
       // Add a ListView to the drawer. This ensures the user can scroll
       // through the options in the drawer if there isn't enough vertical
@@ -35,22 +49,42 @@ class _UserDrawerState extends State<UserDrawer> {
         children: <Widget>[
           DrawerHeader(
             child: Center(
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: NetworkImage(imageUrl),
-              ),
+              child: Column(children: <Widget>[
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(imageUrl),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Hello..!! $name',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              ]),
             ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           ListTile(
             leading: Icon(
               Icons.monetization_on,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
-            title: Text('My Coupon'),
+            title: Text(
+              'My Coupon',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
             onTap: () {
               Navigator.pushNamed(context, '/yourcoupon');
             },
@@ -59,27 +93,35 @@ class _UserDrawerState extends State<UserDrawer> {
             leading: Icon(
               Icons.account_circle,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
-            title: Text('Sign Out'),
+            title: Text(
+              'Sign Out',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
             onTap: () {
               signOutGoogle();
+
+              Navigator.pushNamed(context, '/feed');
+              //Navigator.pushNamed(context, '/home');
               Navigator.of(context)
                   .push(new MaterialPageRoute(builder: (BuildContext context) {
                 return Home();
               }));
-              // Navigator.pushNamed(context, '/feed');
-              // Navigator.pushNamed(context, '/home');
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.feedback,
-              size: 40,
-              color: Colors.blueAccent,
-            ),
+            leading: Icon(Icons.feedback,
+                size: 40, color: Theme.of(context).primaryColor),
             title: Text(
               'Feedback',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
             ),
             onTap: () {
               Navigator.pushNamed(context, '/feed');
@@ -87,13 +129,19 @@ class _UserDrawerState extends State<UserDrawer> {
           ),
           ListTile(
             leading: Icon(
-              Icons.settings,
+              Icons.bookmark,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
-            title: Text('Settings'),
+            title: Text(
+              'Terms & Conditions',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
             onTap: () {
-              Navigator.pushNamed(context, '/set');
+              _launchURL();
             },
           ),
         ],
@@ -114,22 +162,30 @@ class NormalDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Coupon Assistent',
-                style: TextStyle(
-                  fontSize: 35,
-                  color: Colors.white,
-                )),
+            child: Center(
+              child: Text('Coupon Assistant',
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Colors.white,
+                  )),
+            ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Theme.of(context).primaryColor,
             ),
           ),
           ListTile(
             leading: Icon(
               Icons.account_circle,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
-            title: Text('Login'),
+            title: Text(
+              'Login',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
             onTap: () {
               Navigator.pushNamed(context, '/login');
             },
@@ -138,24 +194,34 @@ class NormalDrawer extends StatelessWidget {
             leading: Icon(
               Icons.feedback,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
             title: Text(
               'Feedback',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
             ),
             onTap: () {
-              Navigator.pushNamed(context, '/feed');
+              Navigator.pushNamed(context, '/login');
             },
           ),
           ListTile(
             leading: Icon(
-              Icons.settings,
+              Icons.bookmark,
               size: 40,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
             ),
-            title: Text('Settings'),
+            title: Text(
+              'Terms & Conditions',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
             onTap: () {
-              Navigator.pushNamed(context, '/set');
+              _launchURL();
             },
           ),
         ],

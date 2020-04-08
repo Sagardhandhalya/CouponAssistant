@@ -166,9 +166,10 @@ class _AddCouponState extends State<AddCoupon> {
                           't_c': _data.t_c
                         });
                         Navigator.pop(context);
+                        Navigator.pop(context);
                       }
                     },
-                    color: Colors.redAccent,
+                    color: Theme.of(context).indicatorColor,
                   ),
                   margin: new EdgeInsets.only(top: 20.0),
                 )

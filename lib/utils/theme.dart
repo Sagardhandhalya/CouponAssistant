@@ -24,7 +24,7 @@ ThemeData basicTheme() {
           color: Color(0xFFCCC5AF),
         ),
         body1: base.body1.copyWith(
-          color: Color(0xFF807A6B),
+          color: Colors.blue, //Color(0xFF807A6B),
         ));
   }
 
@@ -33,12 +33,12 @@ ThemeData basicTheme() {
       textTheme: _basicTextTheme(base.textTheme),
       //textTheme: Typography().white,
       // primaryColor: Color(0xffce107c),
-      primaryColor: Colors.redAccent,
-      indicatorColor: Color(0xFF807A6B),
+      primaryColor: Colors.green[700],
+      indicatorColor: Colors.teal[700],
       scaffoldBackgroundColor: Color(0xFFF5F5F5),
-      accentColor: Color(0xFFFFF8E1),
+      accentColor: Colors.black,
       iconTheme: IconThemeData(color: Colors.green, size: 100.0),
-      buttonColor: Colors.redAccent,
+      buttonColor: Colors.blue[300],
       backgroundColor: Colors.white,
       tabBarTheme: base.tabBarTheme.copyWith(
         labelColor: Color(0xffce107c),

@@ -4,6 +4,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './home.dart';
 
+
+String qry="";
 class Pcoupon extends StatefulWidget {
   @override
   _PcouponState createState() => _PcouponState();
@@ -118,6 +120,14 @@ class _PcouponState extends State<Pcoupon> {
                   }
                 });
               }),
+              new IconButton(
+                icon: new Icon(
+                  Icons.search
+                ),
+                onPressed: (){
+                  showSearch(context: context, delegate: Datasearch());
+                },
+              ),
         ],
       ),
       body: StreamBuilder(
@@ -139,7 +149,10 @@ class _PcouponState extends State<Pcoupon> {
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
+              return snapshot.data.documents[index]['company'].toString().toLowerCase().contains(qry.toString().toLowerCase())?
+               _buildcoupon(context, snapshot.data.documents[index])
+               :
+               new Container();
             }),
           );
         },
@@ -172,5 +185,49 @@ class _PcouponState extends State<Pcoupon> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+}
+
+
+class Datasearch extends SearchDelegate<String>{
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    
+    return [
+      new IconButton
+      (
+        icon: Icon
+        (
+          Icons.clear
+        ), 
+        onPressed: (){ query="";}
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return 
+      new IconButton(
+        icon: new AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow, 
+          progress: transitionAnimation,
+        ), 
+        onPressed: (){
+          close(context, null);
+        }
+      );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    qry=query;
+    return Home();
   }
 }

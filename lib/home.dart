@@ -5,6 +5,7 @@ import './drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 String userId = 'user';
+String qry="";
 
 class Home extends StatefulWidget {
   @override
@@ -134,7 +135,15 @@ class _HomeState extends State<Home> {
                     sortby = "exp_date";
                   }
                 });
-              })
+              }),
+          new IconButton(
+            icon: new Icon(
+              Icons.search
+            ),
+            onPressed: (){
+              showSearch(context: context, delegate: Datasearch());
+            },
+          ),
         ],
       ),
       drawer: isloggedin ? UserDrawer() : NormalDrawer(),
@@ -155,12 +164,58 @@ class _HomeState extends State<Home> {
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
+              return snapshot.data.documents[index]['company'].toString().toLowerCase().contains(qry.toString().toLowerCase())?
+               _buildcoupon(context, snapshot.data.documents[index])
+               :
+               new Container();
             }),
           );
         },
       ),
     );
+  }
+}
+
+class Datasearch extends SearchDelegate<String>{
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    
+    return [
+      new IconButton
+      (
+        icon: Icon
+        (
+          Icons.clear
+        ), 
+        onPressed: (){ query="";}
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return 
+      new IconButton(
+        icon: new AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow, 
+          progress: transitionAnimation,
+        ), 
+        onPressed: (){
+          close(context, null);
+        }
+      );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    return null;
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    qry=query;
+    return Home();
   }
 }
 
@@ -194,3 +249,4 @@ class _HomeState extends State<Home> {
     );
   }
 */
+

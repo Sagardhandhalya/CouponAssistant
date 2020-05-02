@@ -1,3 +1,4 @@
+import 'package:CouponAssistant/services/MOCK_DATA.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,6 +16,42 @@ const spinkit = SpinKitRotatingCircle(
 );
 
 class _PcouponState extends State<Pcoupon> {
+
+
+Future<String> deleteoldcoupon() async
+  {
+      QuerySnapshot querySnapshot = await   Firestore.instance
+                            .collection('users')
+                            .document(userId)
+                            .collection('personal_coupon')
+                            .getDocuments();
+    var list = querySnapshot.documents;
+
+    for(var coupon in list)
+    {
+      DateTime dateTimeCreatedAt = DateTime.parse(coupon['exp_date']); 
+DateTime dateTimeNow = DateTime.now();
+final differenceInDays = dateTimeCreatedAt.difference(dateTimeNow).inDays;
+print('$differenceInDays');
+
+  if(differenceInDays < 2)
+  {
+    Firestore.instance.collection('users')
+                            .document(userId)
+                            .collection('personal_coupon').document(coupon.documentID).delete(); 
+  }
+
+    }
+
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    deleteoldcoupon();
+    
+  }
+
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
       onTap: () {
@@ -139,7 +176,13 @@ class _PcouponState extends State<Pcoupon> {
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
+              return 
+             Hero (
+                tag : snapshot.data.documents[index].documentID,
+                child : _buildcoupon(context, snapshot.data.documents[index])
+                
+                );
+              
             }),
           );
         },

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 String userId = 'user';
 
@@ -20,6 +21,51 @@ class _HomeState extends State<Home> {
   bool isloggedin = false;
   String sortby = "discount";
 
+
+  final FirebaseMessaging _messaging = FirebaseMessaging(); 
+
+  Future<String> deleteoldcoupon() async
+  {
+      QuerySnapshot querySnapshot = await Firestore.instance.collection("general_coupons").getDocuments();
+    var list = querySnapshot.documents;
+
+    for(var coupon in list)
+    {
+      DateTime dateTimeCreatedAt = DateTime.parse(coupon['exp_date']); 
+DateTime dateTimeNow = DateTime.now();
+final differenceInDays = dateTimeCreatedAt.difference(dateTimeNow).inDays;
+print('$differenceInDays');
+
+  if(differenceInDays < 1)
+  {
+    Firestore.instance.collection("general_coupons").document(coupon.documentID).delete(); 
+  }
+
+    }
+
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _messaging.configure(
+      onLaunch : (Map<String ,dynamic> message) async {
+        
+      } 
+    ) ;
+    _messaging.getToken().then((token){
+      print(token);
+       Firestore.instance.collection('tokens')
+                            .document(token)
+                            .setData({
+                              'devicetoken':token
+                         
+                        });
+    });
+
+     deleteoldcoupon();
+  }
+
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
       onTap: () {
@@ -30,7 +76,8 @@ class _HomeState extends State<Home> {
           'coupon_code': doc['coupon_code'],
           't_c': doc['t_c'],
           'other_details': doc['other_details'],
-          'personal': false
+          'personal': false,
+          'id': doc.documentID
         });
       },
       child: Padding(
@@ -69,7 +116,7 @@ class _HomeState extends State<Home> {
                       )
                     ]),
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 25),
               Column(children: <Widget>[
                 Text(
                   doc['discount'] + '%OFF',
@@ -78,7 +125,7 @@ class _HomeState extends State<Home> {
                       fontWeight: FontWeight.w300,
                       color: Theme.of(context).accentColor),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Text(
                   'Expiry date',
                   style: TextStyle(
@@ -140,7 +187,7 @@ class _HomeState extends State<Home> {
       drawer: isloggedin ? UserDrawer() : NormalDrawer(),
       body: StreamBuilder(
         stream: Firestore.instance
-            .collection("general coupons")
+            .collection("general_coupons")
             .orderBy(sortby, descending: false)
             .snapshots(),
         builder: (context, snapshot) {
@@ -155,7 +202,12 @@ class _HomeState extends State<Home> {
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
+              return 
+              Hero (
+                tag : snapshot.data.documents[index].documentID,
+                child : _buildcoupon(context, snapshot.data.documents[index])
+                
+                );
             }),
           );
         },

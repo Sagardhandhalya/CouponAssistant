@@ -28,10 +28,14 @@ class _CouponData {
 class _AddCouponState extends State<AddCoupon> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
+  Map data = {};
+
   _CouponData _data = new _CouponData();
 
   @override
   Widget build(BuildContext context) {
+    data = ModalRoute.of(context).settings.arguments;
+    print(data);
     final Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(

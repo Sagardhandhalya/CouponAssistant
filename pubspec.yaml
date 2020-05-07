@@ -28,6 +28,7 @@ dependencies:
   firebase_auth: ^0.15.2
   google_sign_in: ^4.0.4
   datetime_picker_formfield: ^1.0.0
+  
   date_format: ^1.0.8
   firebase_ml_vision:
   image_picker:  ^0.6.0+9
@@ -36,6 +37,7 @@ dependencies:
   share: ^0.6.3+1
   url_launcher: ^5.4.2
   firebase_messaging:
+  flutter_local_notifications:
   
 
   

@@ -4,8 +4,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './drawer.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 String userId = 'user';
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 class Home extends StatefulWidget {
   @override
@@ -21,7 +22,6 @@ class _HomeState extends State<Home> {
   bool isloggedin = false;
   String sortby = "discount";
 
-
   final FirebaseMessaging _messaging = FirebaseMessaging(); 
 
   Future<String> deleteoldcoupon() async
@@ -31,10 +31,10 @@ class _HomeState extends State<Home> {
 
     for(var coupon in list)
     {
-      DateTime dateTimeCreatedAt = DateTime.parse(coupon['exp_date']); 
+DateTime dateTimeCreatedAt = DateTime.parse(coupon['exp_date']); 
 DateTime dateTimeNow = DateTime.now();
 final differenceInDays = dateTimeCreatedAt.difference(dateTimeNow).inDays;
-print('$differenceInDays');
+
 
   if(differenceInDays < 1)
   {
@@ -54,7 +54,6 @@ print('$differenceInDays');
       } 
     ) ;
     _messaging.getToken().then((token){
-      print(token);
        Firestore.instance.collection('tokens')
                             .document(token)
                             .setData({
@@ -64,7 +63,13 @@ print('$differenceInDays');
     });
 
      deleteoldcoupon();
+
+     
   }
+  
+ 
+
+  
 
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
@@ -121,7 +126,7 @@ print('$differenceInDays');
                 Text(
                   doc['discount'] + '%OFF',
                   style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 25, 
                       fontWeight: FontWeight.w300,
                       color: Theme.of(context).accentColor),
                 ),
@@ -132,6 +137,9 @@ print('$differenceInDays');
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
                       color: Theme.of(context).accentColor),
+
+
+
                 ),
                 SizedBox(height: 5),
                 Text(
@@ -181,7 +189,8 @@ print('$differenceInDays');
                     sortby = "exp_date";
                   }
                 });
-              })
+              }),
+              
         ],
       ),
       drawer: isloggedin ? UserDrawer() : NormalDrawer(),

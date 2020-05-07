@@ -1,4 +1,4 @@
-import 'package:CouponAssistant/services/MOCK_DATA.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import './home.dart';
 
 class Pcoupon extends StatefulWidget {
-  @override
+  @override 
   _PcouponState createState() => _PcouponState();
 }
 
@@ -42,6 +42,7 @@ print('$differenceInDays');
   }
 
     }
+    return 'true';
 
   }
 

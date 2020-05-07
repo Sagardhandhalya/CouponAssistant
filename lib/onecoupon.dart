@@ -75,8 +75,21 @@ Future onSelectNotification(String payload) async {
   // }
   
     Future<void> _scheduleNotification() async {
-    var scheduledNotificationDateTime =
-        DateTime.now().add(Duration(seconds: 2));
+      var pendingNotificationRequests =
+         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+        
+     print(pendingNotificationRequests.length);
+     int id = pendingNotificationRequests.length +1;
+     String title = 'coupon Expiry Update';
+     String description  = "your coupon from"+ data['company'] +"will expire on" + data['exp_date']; 
+       DateTime dt ;
+  dt = await showDatePicker(
+            context: context,
+            initialDate: DateTime.now().add(Duration(days:1)),
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2101),
+            );
+    var scheduledNotificationDateTime = dt;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
         'your other channel name',
@@ -91,28 +104,19 @@ Future onSelectNotification(String payload) async {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
-        0,
-        'scheduled title',
-        'scheduled body',
-        scheduledNotificationDateTime,
-        platformChannelSpecifics);
+         id,
+    title,
+    description,
+    scheduledNotificationDateTime,
+    platformChannelSpecifics,);
       
       //  flutterLocalNotificationsPlugin.cancelAll();
       print(scheduledNotificationDateTime);
-        var pendingNotificationRequests =
-         await flutterLocalNotificationsPlugin.pendingNotificationRequests();
         
-     print(pendingNotificationRequests.length);
   }
   
  // Future _showNotificationWithDefaultSound() async {
-   // DateTime dt ;
-  // dt = await showDatePicker(
-  //           context: context,
-  //           initialDate: DateTime.now(),
-  //           firstDate: DateTime.now(),
-  //           lastDate: DateTime(2101),
-  //           );
+  
   //           print(dt);
     //         TimeOfDay t = await showTimePicker(
     //   context: context,

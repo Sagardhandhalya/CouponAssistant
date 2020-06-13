@@ -81,7 +81,7 @@ Future onSelectNotification(String payload) async {
      print(pendingNotificationRequests.length);
      int id = pendingNotificationRequests.length +1;
      String title = 'coupon Expiry Update';
-     String description  = "your coupon from"+ data['company'] +"will expire on" + data['exp_date']; 
+     String description  = " your coupon from"+ data['company'] +" will expire on " + data['exp_date']; 
        DateTime dt ;
   dt = await showDatePicker(
             context: context,
@@ -104,7 +104,7 @@ Future onSelectNotification(String payload) async {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
-         id,
+    id,
     title,
     description,
     scheduledNotificationDateTime,
@@ -114,42 +114,8 @@ Future onSelectNotification(String payload) async {
       print(scheduledNotificationDateTime);
         
   }
-  
- // Future _showNotificationWithDefaultSound() async {
-  
-  //           print(dt);
-    //         TimeOfDay t = await showTimePicker(
-    //   context: context,
-    //   initialTime: TimeOfDay.now()
-    // );
-    // Time t = Time(10,40,30);
-    
-  //   var scheduledNotificationDateTime = DateTime.now().add( 
-  //  Duration(minutes: 1)
 
-  //    );
-      //  print(scheduledNotificationDateTime);
-  // var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-  //     'your channel id', 'your channel name', 'your channel description',
-  //     importance: Importance.Max, priority: Priority.High);
-  // var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-  // var platformChannelSpecifics = new NotificationDetails(
-  //     androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-// await flutterLocalNotificationsPlugin.showDailyAtTime(
-//     0,
-//     'Coupon expire',
-//     'your coupon will expire .............. plese use them..',
-//     t,
-//     platformChannelSpecifics,
-// );
-  //var pendingNotificationRequests =
-        // await flutterLocalNotificationsPlugin.pendingNotificationRequests();
-        
-   //  print(pendingNotificationRequests.length );
-       //print( pendingNotificationRequests[1].id);
-// flutterLocalNotificationsPlugin.cancelAll() ;
-  
-//}
+
   Widget build(BuildContext context) {
     
     data = ModalRoute.of(context).settings.arguments;
@@ -200,6 +166,7 @@ Future onSelectNotification(String payload) async {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+          
             Text(
               data['coupon_code'],
               style: TextStyle(fontSize: 25, color: Colors.black),
@@ -345,3 +312,10 @@ Future onSelectNotification(String payload) async {
           ]));
   }
 }
+
+
+
+
+
+
+

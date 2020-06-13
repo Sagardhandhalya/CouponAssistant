@@ -34,7 +34,7 @@ DateTime dateTimeNow = DateTime.now();
 final differenceInDays = dateTimeCreatedAt.difference(dateTimeNow).inDays;
 print('$differenceInDays');
 
-  if(differenceInDays < 2)
+  if(differenceInDays < 0)
   {
     Firestore.instance.collection('users')
                             .document(userId)

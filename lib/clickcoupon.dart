@@ -461,13 +461,32 @@ class _ClickCouponState extends State<ClickCoupon> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 RaisedButton(
-                  color: Theme.of(context).indicatorColor,
-                  child: Text('Pick an image'),
+                  color: Colors.green[400],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(topLeft : Radius.circular(15.0) , bottomLeft: Radius.circular(16.0)),
+                  ),
+                
+                  child: Row(
+                    children:const <Widget>[
+                      Icon( Icons.cloud_upload,size: 30,color: Colors.white,),
+                      SizedBox(width : 10)
+                      ,Text('Pick an image'),
+                    ]
+                  ),
                   onPressed: pickImage,
                 ),
                 RaisedButton(
-                  color: Theme.of(context).indicatorColor,
-                  child: Text('click an image'),
+                  color: Colors.green[400],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(topRight : Radius.circular(15.0) , bottomRight: Radius.circular(16.0)),
+                  ),
+                  child:Row(
+                    children:const <Widget>[
+                      Icon( Icons.photo_camera,size: 30,color: Colors.white,),
+                      SizedBox(width : 10)
+                      ,Text('Click an image'),
+                    ]
+                  ),
                   onPressed: clickImage,
                 ),
               ],

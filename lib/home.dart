@@ -225,33 +225,4 @@ final differenceInDays = dateTimeCreatedAt.difference(dateTimeNow).inDays;
   }
 }
 
-/*
- Widget build(BuildContext context) {
-    _loaduser();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('General Coupon'),
-      ),
-      drawer: isloggedin ? UserDrawer() : NormalDrawer(),
-      body: StreamBuilder(
-        stream: Firestore.instance
-            .collection("general coupons")
-            .orderBy("exp_date", descending: false)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: spinkit,
-            );
-          }
-          return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
-            },
-          );
-        },
-      ),
-    );
-  }
-*/
+

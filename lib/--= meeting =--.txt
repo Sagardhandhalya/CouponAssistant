@@ -1,27 +1,38 @@
 --= meeting =--
 
-Why to choose flutter 
-1. Fast
+Why to choose flutter      
+1.Fast
 2.compile direct to android
 3.For both plate form android & Ios
 4.Native is good for HTML,CSS,JS
 5.it has a loat off plugins avalable for that prewrite 
     can direct function from them.
+6. Dart programming language 
+
+%% 
+- about everyrhing is widget futter  (small unmutable part of ui)
+1.widget : hold configration
+2.Element :manage ref in widget tree
+3.Render Object : paint ui
+
 
 
 Why to choose Firebase :
 
 1. Firebase is full backend solution provide every thing for authentication , database , Ml kit alse
 
-2. Firebase has oauth framwork for authentication  Ex. How oauth work...
+2. Firebase has oauth framework for authentication  Ex. How oauth work...
 
 3. I use ml kit from Firebase
 
-4. Pricing is very 50k read/day  and 20k write/day
+4. Pricing is very 50k read/day  and 20k write/day 10Mb data chnge in one transection
 
 5.it can done job without internet
 
 6.For clould notifications 
+
+7. it sclable because we are using spark plan but if your read an write will increse than firebase will tell to upgrade plan.
+dulingo , the economist and the new york times also use firebase as backend.
 
 
 => Very useful class diagrame and 

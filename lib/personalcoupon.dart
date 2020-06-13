@@ -1,4 +1,4 @@
-import 'package:CouponAssistant/services/MOCK_DATA.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,7 +9,7 @@ import './home.dart';
 String sortby = 'exp_date';
 String qry="";
 class Pcoupon extends StatefulWidget {
-  @override
+  @override 
   _PcouponState createState() => _PcouponState();
 }
 
@@ -42,6 +42,105 @@ print('$differenceInDays');
     Firestore.instance.collection('users')
                             .document(userId)
                             .collection('personal_coupon').document(coupon.documentID).delete(); 
+
+  }
+
+    }
+    return 'true';
+
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    deleteoldcoupon();
+    
+  }
+
+  Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/onecoupon', arguments: {
+          'company': doc['company'],
+          'exp_date': doc['exp_date'],
+          'discount': doc['discount'],
+          'coupon_code': doc['coupon_code'],
+          't_c': doc['t_c'],
+          'other_details': doc['other_details'],
+          'personal': true,
+          'id': doc.documentID
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.orange[50],
+
+              spreadRadius: 5.0, // has the effect of extending the shadow
+            ),
+          ], borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue[200],
+                        //blurRadius: 1.0, // has the effect of softening the shadow
+                        spreadRadius:
+                            10.0, // has the effect of extending the shadow
+                      )
+                    ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        doc['company'],
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700),
+                      )
+                    ]),
+              ),
+              SizedBox(height: 30),
+              Column(children: <Widget>[
+                Text(
+                  doc['discount'].indexOf('%') == -1
+                      ? '${doc['discount']}% OFF'
+                      : '${doc['discount']} OFF',
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Expiry date',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  doc['exp_date'],
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).accentColor),
+                ),
+              ]),
+            ],
+          ),
+        ),
+      ),
+    );
+
   }
 
     }
@@ -100,10 +199,15 @@ print('$differenceInDays');
             crossAxisCount: 2,
             // Generate 100 widgets that display their index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
-              return Hero(
-                tag: snapshot.data.documents[index].documentID,
-                child: _buildcoupon(context, snapshot.data.documents[index])
-              );
+=
+              return 
+             Hero (
+                tag : snapshot.data.documents[index].documentID,
+                child : _buildcoupon(context, snapshot.data.documents[index])
+                
+                );
+              
+
             }),
           );
         },

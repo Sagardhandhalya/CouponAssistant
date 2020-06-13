@@ -1,14 +1,19 @@
 import 'dart:io';
-import './home.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class ClickCoupon extends StatefulWidget {
   @override
   _ClickCouponState createState() => _ClickCouponState();
 }
+
+
+
+// show the dialog
 
 class _ClickCouponState extends State<ClickCoupon> {
   File pickedImage;
@@ -27,7 +32,8 @@ class _ClickCouponState extends State<ClickCoupon> {
     setState(() {
       pickedImage = tempStore;
       isImageLoaded = true;
-      readText();
+       readText();
+      
     });
   }
 
@@ -380,7 +386,38 @@ class _ClickCouponState extends State<ClickCoupon> {
         _expDate = "2020-${month}-${day}";
       }
 
-      Firestore.instance
+  print("Saar,,,,,,,,,,,,,,,");
+        
+        //   showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Text('Just for fun'),
+        //       content: Text('you have to edit it custom...'),
+        //       actions: <Widget>[
+        //         RaisedButton(
+        //             child: Text('Edit'),
+        //             onPressed: () {
+        //               Navigator.pushNamed(context, '/add',arguments: {
+        //  'company' : 'Sagar',
+        //  'discount' : 'Sagar',
+        //   'exp_date' : 'Ebsfubl',
+        //    'coupon_code' : 'snfs h',
+        //     't_c' : 'jgrof',
+        //      'other_details' : 'fbg sh'
+        //               });
+        //             }),
+        //             RaisedButton(
+        //             child: Text('Edit'),
+        //             onPressed: () {
+        //             Navigator.pop(context);
+        //             })
+        //       ],
+        //     );
+        //   });
+        
+
+     /* Firestore.instance
           .collection('users')
           .document(userId)
           .collection('personal_coupon')
@@ -392,7 +429,7 @@ class _ClickCouponState extends State<ClickCoupon> {
         'discount': _discount,
         'other_details': 'unknown',
         't_c': output,
-      });
+      });*/
       Navigator.pop(context);
       Navigator.pop(context);
     });

@@ -14,6 +14,7 @@ String imageUrl;
 String current_user_id;
 
 Future<String> signInWithGoogle() async {
+
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;

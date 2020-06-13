@@ -19,8 +19,16 @@ class UserDrawer extends StatefulWidget {
 }
 
 class _UserDrawerState extends State<UserDrawer> {
-  String imageUrl = '';
+  String imageUrl = 'https://image.shutterstock.com/image-vector/user-icon-trendy-flat-style-260nw-418179856.jpg';
   String name = 'User';
+
+@override
+void initState() { 
+  super.initState();
+    _loadurl(); 
+}
+
+  
 
   void _loadurl() async {
     final storage = FlutterSecureStorage();
@@ -37,7 +45,7 @@ class _UserDrawerState extends State<UserDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    _loadurl();
+    
 
     return Drawer(
       // Add a ListView to the drawer. This ensures the user can scroll

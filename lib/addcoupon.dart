@@ -38,6 +38,7 @@ class _AddCouponState extends State<AddCoupon> {
   TextEditingController _datecontroller=new TextEditingController();
 
   Map data = {};
+
   var companies=[
     'Flipkart',
     'Snapdeal',
@@ -79,6 +80,7 @@ class _AddCouponState extends State<AddCoupon> {
     'FirstCry',
   ];
   String _currentSelectedValue="";
+
   _CouponData _data = new _CouponData();
   DateTime selectedDate = DateTime.now();
 

@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,15 +28,15 @@ void initState() {
   
 }
 Future onSelectNotification(String payload) async {
-    showDialog(
-      context: context,
-      builder: (_) {
-        return new AlertDialog(
-          title: Text("PayLoad"),
-          content: Text("Payload : $payload"),
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (_) {
+    //     return new AlertDialog(
+    //       title: Text("PayLoad"),
+    //       content: Text("check your coupons"),
+    //     );
+    //   },
+    // );
   }
 
   bool isOpen = false;
@@ -81,7 +80,7 @@ Future onSelectNotification(String payload) async {
      print(pendingNotificationRequests.length);
      int id = pendingNotificationRequests.length +1;
      String title = 'coupon Expiry Update';
-     String description  = " your coupon from"+ data['company'] +" will expire on " + data['exp_date']; 
+     String description  = " your coupon from "+ data['company'] +" will expire on " + data['exp_date']; 
        DateTime dt ;
   dt = await showDatePicker(
             context: context,
@@ -120,6 +119,7 @@ Future onSelectNotification(String payload) async {
     
     data = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      key: ValueKey("onecouponscaf"),
         appBar: AppBar(
           title: Text('Coupon details'),
         ),
@@ -172,6 +172,7 @@ Future onSelectNotification(String payload) async {
               style: TextStyle(fontSize: 25, color: Colors.black),
             ),
             Material(
+                key: ValueKey("copy_code"),
                 color: Colors.transparent,
                 shape: CircleBorder(),
                 child: IconButton(
@@ -211,6 +212,7 @@ Future onSelectNotification(String payload) async {
             ],
           ),
           IconButton(
+            key: ValueKey("set_notification"),
             icon: Icon(
               Icons.event_available,
               color: Colors.cyan[900],
@@ -235,7 +237,9 @@ Future onSelectNotification(String payload) async {
                 //     style: TextStyle(fontSize: 20, color: Colors.black),
                 //   ),
                 IconButton(
+                  key: ValueKey("comment_button"),
         icon: Icon(
+          
           Icons.comment,
           color: Colors.cyan[900],
         ),
@@ -246,6 +250,7 @@ Future onSelectNotification(String payload) async {
         },
                 ),
                 IconButton(
+                  key: ValueKey("share_button"),
         icon: Icon(
           Icons.share,
           color: Colors.cyan[900],
@@ -264,6 +269,8 @@ Future onSelectNotification(String payload) async {
                   data['exp_date'] +
                   ' \n \n If you need more coupon then download Coupon Assistant App \n',
               subject: 'Share a coupon from coupon Assistant app');
+
+             
         },
                 ),
                 data['personal'] == true
@@ -288,6 +295,7 @@ Future onSelectNotification(String payload) async {
             ),
             isOpen
                 ? Container(
+                  key: ValueKey("tcbox"),
           margin: EdgeInsets.all(10),
           height: 700,
           decoration: BoxDecoration(

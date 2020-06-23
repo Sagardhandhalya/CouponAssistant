@@ -6,12 +6,12 @@ import 'package:dropdown_formfield/dropdown_formfield.dart';
 import './home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() => runApp(new MaterialApp(
-  home: AddCoupon(),
-  theme: ThemeData(
-    primarySwatch: Colors.green,
-  ),
-));
+// void main() => runApp(new MaterialApp(
+//   home: AddCoupon(),
+//   theme: ThemeData(
+//     primarySwatch: Colors.red,
+//   ),
+// ));
 
 class AddCoupon extends StatefulWidget {
   @override
@@ -39,7 +39,7 @@ class _AddCouponState extends State<AddCoupon> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   TextEditingController _datecontroller=new TextEditingController();
 
-  Map data = {};
+  // Map data = {};
 
   var companies=[
     'Flipkart',
@@ -81,7 +81,13 @@ class _AddCouponState extends State<AddCoupon> {
     '1mg',
     'FirstCry',
   ];
-  String _currentSelectedValue="";
+  @override
+  @override
+  void initState() { 
+    super.initState();
+    companies.sort();
+  }
+  String _currentSelectedValue="Ebay";
 
   _CouponData _data = new _CouponData();
   DateTime selectedDate = DateTime.now();
@@ -90,7 +96,7 @@ class _AddCouponState extends State<AddCoupon> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate:  selectedDate,
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate)
       setState(() {
@@ -111,9 +117,9 @@ class _AddCouponState extends State<AddCoupon> {
 
   @override
   Widget build(BuildContext context) {
-    data = ModalRoute.of(context).settings.arguments;
-    print(data);
-    final Size screenSize = MediaQuery.of(context).size;
+  //   data = ModalRoute.of(context).settings.arguments;
+  //  print(data);
+  //  final Size screenSize = MediaQuery.of(context).size;
 
     return new Scaffold(
       appBar: new AppBar(
@@ -137,9 +143,7 @@ class _AddCouponState extends State<AddCoupon> {
                           ),
                    
                   child: DropDownFormField(
-
-                    
-                    titleText: "Company",
+                     titleText: "Company",
                     hintText: 'Please choose company name',
                     
                     value: _currentSelectedValue,
@@ -167,6 +171,7 @@ class _AddCouponState extends State<AddCoupon> {
 
                 SizedBox(height :20),
                 new TextFormField(
+                    key : Key('Enter coupon code'),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -193,6 +198,7 @@ class _AddCouponState extends State<AddCoupon> {
                 
            
                     new TextFormField(
+                      key : Key('Choose the Expiry date'),
                    showCursor: true,
                    readOnly: true,
                  controller: _datecontroller,
@@ -222,6 +228,7 @@ class _AddCouponState extends State<AddCoupon> {
                 SizedBox(height :20),
 
                 new TextFormField(
+                   key : Key('Enter discount here'),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -250,7 +257,7 @@ class _AddCouponState extends State<AddCoupon> {
                         ),)),
                         SizedBox(height :20),
                 new TextFormField(
-                  
+                  key : Key('Enter terms and conditions'),
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) {
                       this._data.t_c = value;
@@ -266,6 +273,7 @@ class _AddCouponState extends State<AddCoupon> {
                         ),)),
                         SizedBox(height :20),
                 new TextFormField(
+                  key : Key('Enter other details here'),
                     keyboardType: TextInputType.emailAddress,
                     onSaved: (String value) {
                       this._data.other_details = value;

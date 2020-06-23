@@ -183,6 +183,7 @@ class NormalDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            key: ValueKey("login"),
             leading: Icon(
               Icons.account_circle,
               size: 40,
@@ -200,6 +201,7 @@ class NormalDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            key: ValueKey("feedback"),
             leading: Icon(
               Icons.feedback,
               size: 40,
@@ -217,6 +219,7 @@ class NormalDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            key: ValueKey("terms"),
             leading: Icon(
               Icons.bookmark,
               size: 40,

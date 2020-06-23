@@ -121,6 +121,7 @@ class _LoginState extends State<Login> {
 
   Widget _signInButton() {
     return OutlineButton(
+      key: ValueKey("signinbtn"),
       splashColor: Colors.blue[50],
       onPressed: () {
         signInWithGoogle().whenComplete(() {
@@ -158,6 +159,7 @@ class _LoginState extends State<Login> {
 
   Widget _guest() {
     return OutlineButton(
+      key: ValueKey("guestbtn"),
       splashColor: Colors.blue[50],
       onPressed: () {
         Navigator.of(context)

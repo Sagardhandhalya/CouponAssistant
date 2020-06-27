@@ -279,6 +279,14 @@ class _ClickCouponState extends State<ClickCoupon> {
           }
         }
       }
+      if(x.length==10)
+      {
+        if(x[4]=='/' && x[7]=='/' && x.substring(0,4)=="2020")
+        {
+          month=(x[5]+x[6]);
+          day=(x[8]+x[9]);
+        }
+      }
     }
     if (month == null) {
       i = 0;

@@ -274,8 +274,12 @@ Future<String> deleteoldcoupon() async
   void initState() { 
     super.initState();
     deleteoldcoupon();
+    _selections[0]=true;
     
   }
+  List<bool> _selections = List.generate(3, (_) => false);
+
+bool d = true;
 
   Widget _buildcoupon(BuildContext context, DocumentSnapshot doc) {
     return GestureDetector(
@@ -362,25 +366,14 @@ Future<String> deleteoldcoupon() async
     );
   }
 
-  String sortby = 'exp_date';
+  String sortby = 'discount';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Coupons'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.sort),
-            onPressed: () {
-              setState(() {
-                if (sortby == "exp_date") {
-                  sortby = "discount";
-                } else {
-                  sortby = "exp_date";
-                }
-              });
-            }
-          ),
+          
           IconButton(
             icon: Icon(
               Icons.search
@@ -397,7 +390,7 @@ Future<String> deleteoldcoupon() async
             .collection('users')
             .document(userId)
             .collection('personal_coupon')
-            .orderBy(sortby, descending: false)
+            .orderBy(sortby, descending: d)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -409,7 +402,7 @@ Future<String> deleteoldcoupon() async
             // Create a grid with 2 columns. If you change the scrollDirection to
             // horizontal, this produces 2 rows.
             crossAxisCount: 2,
-            // Generate 100 widgets that display their index in the List.
+            // Generate 100 widgets that display thezir index in the List.
             children: List.generate(snapshot.data.documents.length, (index) {
               return 
              Hero (
@@ -422,34 +415,106 @@ Future<String> deleteoldcoupon() async
           );
         },
       ),
-      /*
-       return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (context, index) {
-              return _buildcoupon(context, snapshot.data.documents[index]);
-            },
-          );
-      */
+    
       bottomNavigationBar: new BottomAppBar(
-        shape: CircularNotchedRectangle(),
+       
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.menu, color: Colors.white),
+            Padding(
+            
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text("Sorted By",
+              style: TextStyle(
+                fontSize : 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.black
+
+              ),),
             ),
+            
+             Container(
+               color: Colors.white,
+               
+               child: ToggleButtons(
+                 renderBorder: true,
+                 fillColor: Colors.white,
+                selectedColor: Colors.red,
+                borderWidth: 2,
+                 selectedBorderColor: Colors.green,
+                 borderRadius:BorderRadius.circular(10) ,
+                children: <Widget>[
+                  
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("discount",
+                   key: ValueKey("sort_button"),
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                     ),),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("Company",
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                     
+
+                ),),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("Expairy date",
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                    
+
+                ),),
+                 )
+                
           ],
+          isSelected: _selections,
+                onPressed: (int index) {
+                  
+                  setState(() {
+                   
+                    _selections[index] =true ;
+                    
+                    for(int i=0;i<3;i++)
+                    {
+                      if( i != index) _selections[i] = false ;
+                    }
+                      
+                      if(_selections[0]) 
+                      {sortby ="discount";
+                      d=true;
+                      }
+                      if(_selections[1])
+                      { sortby ="company";
+                        d=false;    
+                      }
+                      if(_selections[2]) 
+                      {sortby ="exp_date";
+                      d=false;
+                      }
+                    
+                  });
+                },
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
+      
+           ],),), 
+           floatingActionButton: new FloatingActionButton(
         child: Icon(Icons.add, size: 30),
         onPressed: () {
           Navigator.pushNamed(context, '/option');
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
+      );
   }
 }
 

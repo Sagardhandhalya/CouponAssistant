@@ -36,3 +36,5 @@ dulingo , the economist and the new york times also use firebase as backend.
 
 
 => Very useful class diagrame and 
+
+flutter drive target=test_driver/perf.dart --profile

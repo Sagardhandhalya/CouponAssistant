@@ -1,81 +1,28 @@
-import 'dart:io';
 
+// import 'package:flutter_test/flutter_test.dart';
 
+// import '../lib/utils/theme.dart';
+// void main(){
+
+//   test('sum', (){
+//     int x = sum(5,3);
+//     expect(x,8);
+//   });
+
+// }
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-
-import 'home.dart';
-
-
-class ClickCoupon extends StatefulWidget {
-  @override
-  _ClickCouponState createState() => _ClickCouponState();
-}
+import 'package:flutter_test/flutter_test.dart';
+import 'package:CouponAssistant/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mockito/mockito.dart';
 
 
 
-// show the dialog
-
-class _ClickCouponState extends State<ClickCoupon> {
-  File pickedImage;
-
-  bool isImageLoaded = false;
-  bool isReaded = false;
-  String output = "";
-  String _company = "X";
-  String _expDate = "";
-  String _discount = "0";
-  String _code = "...";
-  bool disable = false;
-
-  Future pickImage() async {
-    var tempStore = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if(tempStore != null)
-   {  setState(() {
-      pickedImage = tempStore;
-      isImageLoaded = true;
-      disable = true;
-       readText();
-      
-    });
-   }
-  }
-
-  Future clickImage() async {
-    var tempStore = await ImagePicker.pickImage(source: ImageSource.camera);
-     if(tempStore != null)
-   { 
-    setState(() {
-      pickedImage = tempStore;
-      isImageLoaded = true;
-      disable=true;
-      readText();
-    });
-   }
-  }
-
-  Future readText() async {
-    FirebaseVisionImage ourImage = FirebaseVisionImage.fromFile(pickedImage);
-    TextRecognizer recognizeText = FirebaseVision.instance.textRecognizer();
-    VisionText readText = await recognizeText.processImage(ourImage);
-
-    for (TextBlock block in readText.blocks) {
-      for (TextLine line in block.lines) {
-        for (TextElement word in line.elements) {
-          output = output + word.text;
-          output = output + " ";
-        }
-      }
-    }
-    bool _isNumeric(String str) {
-      if (str == null) {
-        return false;
-      }
-      return double.tryParse(str) != null;
-    }
-
+void main()
+{
+  TestWidgetsFlutterBinding.ensureInitialized();
+  String output="00:06 G zomato When is the right time to eat? Always! Hey, foodie! We are all set to delight you with an mmmazing offer.Use code ZOMATO and enjoy up to 50% off on your next order. Pick your favourites from our wide range of cuisines and satisfy all your cravings now! TCA. Begin the binge For the love of food, Team Zomato In case you wish to stop receiving emails from Zomato, please unsubscribe here O";
     var str = output;
     var sln = str.split(" ");
     int i = 0;
@@ -379,133 +326,27 @@ class _ClickCouponState extends State<ClickCoupon> {
         }
       }
     }
-    print(name);
-    print(code);
-    print(percent);
-    print(day);
-    print(month);
-    print(output);
 
-    setState(() {
-      isReaded = true;
-      _discount = percent;
-      _company = name;
-      if (code != null) _code = code;
-      if (day != null && month != null) {
-        _expDate = "2020-${month}-${day}";
-      }
-
-        
-        //   showDialog(
-        //   context: context,
-        //   builder: (context) {
-        //     return AlertDialog(
-        //       title: Text('Just for fun'),
-        //       content: Text('you have to edit it custom...'),
-        //       actions: <Widget>[
-        //         RaisedButton(
-        //             child: Text('Edit'),
-        //             onPressed: () {
-        //               Navigator.pushNamed(context, '/add',arguments: {
-        //  'company' : 'Sagar',
-        //  'discount' : 'Sagar',
-        //   'exp_date' : 'Ebsfubl',
-        //    'coupon_code' : 'snfs h',
-        //     't_c' : 'jgrof',
-        //      'other_details' : 'fbg sh'
-        //               });
-        //             }),
-        //             RaisedButton(
-        //             child: Text('Edit'),
-        //             onPressed: () {
-        //             Navigator.pop(context);
-        //             })
-        //       ],
-        //     );
-        //   });
-        
-
-      Firestore.instance
-          .collection('users')
-          .document(userId)
-          .collection('personal_coupon')
-          .document()
-          .setData({
-        'company': _company,
-        'coupon_code': _code,
-        'exp_date': _expDate,
-        'discount': _discount,
-        'other_details': 'unknown',
-        't_c': output,
-      });
-      Navigator.pop(context);
-      Navigator.pop(context);
+  group("Testing for text recognition", (){
+    test("Test for company name", () async{
+    String name_actual="ZOMATO";    
+    expect(name_actual, name);
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Click Coupon'),
-      ),
-      body: ListView(children: <Widget>[
-        Column(
-          children: <Widget>[
-            SizedBox(height: 100.0),
-            isImageLoaded
-                ? Center(
-                    child: Container(
-                        height: 300.0,
-                        width: 300.0,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: FileImage(pickedImage),
-                                fit: BoxFit.cover))),
-                  )
-                : Container(),
-            SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  
-                  
-                  color: Colors.green[400],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft : Radius.circular(15.0) , bottomLeft: Radius.circular(16.0)),
-                  ),
-                
-                  child: Row(
-                    children:const <Widget>[
-                      Icon( Icons.cloud_upload,size: 30,color: Colors.white,),
-                      SizedBox(width : 10)
-                      ,Text('Pick an image'),
-                    ]
-                  ),
-                  onPressed: disable ? null : pickImage,
-                ),
-                RaisedButton(
-                  color: Colors.green[400],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topRight : Radius.circular(15.0) , bottomRight: Radius.circular(16.0)),
-                  ),
-                  child:Row(
-                    children:const <Widget>[
-                      Icon( Icons.photo_camera,size: 30,color: Colors.white,
-                      ),
-                      SizedBox(width : 10)
-                      ,Text('Click an image'),
-                    ]
-                  ),
-                  onPressed:disable ? null : clickImage,
-                ),
-              ],
-            ),
-            SizedBox(height: 10.0),
-          ],
-        ),
-      ]),
-    );
-  }
+    test("Test for coupon code", () async{    
+      String code_actual="ZOMATO";
+      expect(code_actual, code);
+    });
+    test("Test for discount", () async{    
+      String discount_actual="50%";
+      expect(discount_actual, percent);
+    });
+    test("Test for day of expiry date", () async{    
+      String day_actual=null;
+      expect(day_actual, day);
+    });
+    test("Test for month of expiry date", () async{    
+      String month_actual=null;
+      expect(month_actual, month);
+    });
+  });
 }

@@ -12,7 +12,7 @@ import './addoption.dart';
 
 void main() => {
       runApp(MaterialApp(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: true,
         initialRoute: '/home',
         routes: {
           '/home': (context) => Home(),

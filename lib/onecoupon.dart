@@ -11,7 +11,11 @@ class OneCoupon extends StatefulWidget {
   @override
   _OneCouponState createState() => _OneCouponState();
 }
+final snackBar1 = SnackBar(content: Text('Coupon code is copied.'),
+           
+            );
 
+           
 
 class _OneCouponState extends State<OneCoupon> {
 
@@ -28,15 +32,7 @@ void initState() {
   
 }
 Future onSelectNotification(String payload) async {
-    // showDialog(
-    //   context: context,
-    //   builder: (_) {
-    //     return new AlertDialog(
-    //       title: Text("PayLoad"),
-    //       content: Text("check your coupons"),
-    //     );
-    //   },
-    // );
+  
   }
 
   bool isOpen = false;
@@ -84,10 +80,14 @@ Future onSelectNotification(String payload) async {
        DateTime dt ;
   dt = await showDatePicker(
             context: context,
-            initialDate: DateTime.now().add(Duration(days:1)),
-            firstDate: DateTime(2020),
-            lastDate: DateTime(2101),
+            initialDate: DateTime.now(),
+            firstDate:DateTime.now().subtract(Duration(days:1)) ,
+            lastDate:DateTime.now().add(Duration(days:50)),
             );
+
+            
+            if(dt != null)
+            {
     var scheduledNotificationDateTime = dt;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
@@ -108,9 +108,11 @@ Future onSelectNotification(String payload) async {
     description,
     scheduledNotificationDateTime,
     platformChannelSpecifics,);
+            
       
-      //  flutterLocalNotificationsPlugin.cancelAll();
+      // flutterLocalNotificationsPlugin.cancelAll();
       print(scheduledNotificationDateTime);
+            }
         
   }
 
@@ -120,7 +122,7 @@ Future onSelectNotification(String payload) async {
     data = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       key: ValueKey("onecouponscaf"),
-        appBar: AppBar(
+    appBar: AppBar(
           title: Text('Coupon details'),
         ),
         body: ListView(children: <Widget>[
@@ -171,7 +173,8 @@ Future onSelectNotification(String payload) async {
               data['coupon_code'],
               style: TextStyle(fontSize: 25, color: Colors.black),
             ),
-            Material(
+                    Builder(
+  builder: (context) =>Material(
                 key: ValueKey("copy_code"),
                 color: Colors.transparent,
                 shape: CircleBorder(),
@@ -183,9 +186,11 @@ Future onSelectNotification(String payload) async {
                   onPressed: () {
                     Clipboard.setData(
                         ClipboardData(text: data['coupon_code']));
+                        Scaffold.of(context).showSnackBar(snackBar1);
+
                   },
                 ))
-          ],
+                     ), ],
         ),
                 ),
                 SizedBox(height: 25),
@@ -211,15 +216,17 @@ Future onSelectNotification(String payload) async {
               ),
             ],
           ),
+          
           IconButton(
             key: ValueKey("set_notification"),
             icon: Icon(
               Icons.event_available,
               color: Colors.cyan[900],
             ),
-            onPressed:_scheduleNotification,
+            onPressed: _scheduleNotification,
         
           ),
+          
         ],
                 ),
                 SizedBox(height: 35),

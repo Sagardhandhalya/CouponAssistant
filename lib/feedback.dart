@@ -8,6 +8,12 @@ class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
 }
+final snackBar = SnackBar(content: Text('your feedback is recorded.'),
+           
+            );
+
+// Find the Scaffold in the widget tree and use it to show a SnackBar.
+
 
 class _FeedState extends State<Feed> {
   final storage = FlutterSecureStorage();
@@ -54,7 +60,8 @@ class _FeedState extends State<Feed> {
           SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: RaisedButton(
+            child:Builder(
+  builder: (context) => RaisedButton(
               color: Theme.of(context).indicatorColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
@@ -73,10 +80,15 @@ class _FeedState extends State<Feed> {
                   'rating': rating,
                   'feedback': comment,
                 });
-                Navigator.pop(context);
+                
+
+
+                Scaffold.of(context).showSnackBar(snackBar);
+                
+               
               },
             ),
-          ),
+           ), ),
         ]),
       ),
     );

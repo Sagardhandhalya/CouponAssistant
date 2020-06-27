@@ -9,8 +9,13 @@ void main(){
       home :Pcoupon(),
     ) );
 
-    //expect(find.byType(IconButton),findsNWidgets(3) );
-     expect(find.byType(BottomAppBar),findsNWidgets(1) );
+    expect(find.byType(ToggleButtons),findsNWidgets(1) );
+     expect(find.byType(FloatingActionButton),findsNWidgets(1) );
+     expect(find.byType(IconButton),findsNWidgets(1) );
+  
+   expect(find.byType(BottomAppBar),findsOneWidget );
+   
+   
      expect(find.byType(Hero),findsNWidgets(1) );
      
 

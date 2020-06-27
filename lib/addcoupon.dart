@@ -18,6 +18,7 @@ class AddCoupon extends StatefulWidget {
   State<StatefulWidget> createState() => new _AddCouponState();
 }
 
+
 class _CouponData {
   String company = '';
   String discount = '';
@@ -36,6 +37,8 @@ class _CouponData {
 }
 
 class _AddCouponState extends State<AddCoupon> {
+
+  
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   TextEditingController _datecontroller=new TextEditingController();
 
@@ -91,13 +94,13 @@ class _AddCouponState extends State<AddCoupon> {
 
   _CouponData _data = new _CouponData();
   DateTime selectedDate = DateTime.now();
-
+DateTime now = DateTime.now();
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
-        firstDate:  selectedDate,
-        lastDate: DateTime(2101));
+        initialDate: now,
+        firstDate:  now,
+        lastDate: DateTime(2060));
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
@@ -114,6 +117,7 @@ class _AddCouponState extends State<AddCoupon> {
         _datecontroller.text= selectedDate.year.toString()+"-"+ month+"-"+day;
       });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +294,7 @@ class _AddCouponState extends State<AddCoupon> {
                           ),
                         ),)),
                         SizedBox(height :20),
-                new RaisedButton(
+              Builder( builder: (context) => RaisedButton(
                 
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(16.0))),
@@ -302,11 +306,7 @@ class _AddCouponState extends State<AddCoupon> {
                     if (this._formKey.currentState.validate()) {
                       this._formKey.currentState.save();
 
-                      print(_data.company);
-                      print(_data.coupon_code);
-                      print(_data.discount);
-                      print(_data.exp_date);
-                      print(_data.t_c);
+                 
                       
                       Firestore.instance
                           .collection('users')
@@ -321,13 +321,15 @@ class _AddCouponState extends State<AddCoupon> {
                         'other_details': _data.other_details,
                         't_c': _data.t_c
                       });
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      final snackBar = SnackBar(content: Text('one coupon is added to databse.'),
+           
+            );
+                      Scaffold.of(context).showSnackBar(snackBar);
                     }
                   },
                   color: Theme.of(context).primaryColor,
                 )
-              ],
+               ), ],
             ),
           )),
     );

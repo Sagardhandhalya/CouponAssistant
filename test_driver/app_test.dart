@@ -38,7 +38,7 @@ void main() {
     final feedback = find.byValueKey("feedback");
     final terms = find.byValueKey("terms");
     final SerializableFinder drawerOpenButton = find.byTooltip('Open navigation menu');
-    
+    final SerializableFinder sysback = find.byTooltip('Back'); 
       test('Checking health od driver', () async {
          Health h = await driver.checkHealth();
   print(h.status);
@@ -62,22 +62,20 @@ void main() {
   
     await driver.tap(comment);
     await driver.waitFor(tcbox);
+  await driver.tap(comment);
+//   await driver.tap(share);
+//      print("tepped a search");
+//   // await driver.waitForAbsent(share);
+//     await Process.run(
+//   'adb', 
+//   <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
+//   runInShell: true,
+// );
 
-  await driver.tap(share);
-     print("tepped a search");
-  // await driver.waitForAbsent(share);
-    await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
+  await driver.waitFor(sysback);
+  await driver.tap(sysback);
 
-   await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
-print("tepped a back");
+// print("tepped a back");
 await driver.tap(onecoupon2);
     await driver.waitForAbsent(onecoupon2);
     await driver.tap(copy);
@@ -85,53 +83,42 @@ await driver.tap(onecoupon2);
     await driver.tap(comment);
     await driver.waitFor(tcbox);
 
-      await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
+   await driver.waitFor(sysback);
+  await driver.tap(sysback);
+    await delay(2000);
 
     print("home paged general coupon and functionality test paseed !!!!!!");
 });
   
   test('drawer befor login test..', () async{
+    final timeline = await driver.traceAction(() async {
     // open drawer...
     await driver.waitFor(drawerOpenButton);
     await driver.tap(drawerOpenButton);
     // tap login ..
     await driver.waitFor(login);
     await driver.tap(login);
-       await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
+         await driver.waitFor(sysback);
+  await driver.tap(sysback);
 
-      // open terms..
-
-    await driver.waitFor(terms);
-    await driver.tap(terms);
-       await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
-    await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);
 
    print( "tap on feedback");
     await driver.waitFor(feedback);
     await driver.tap(feedback);
 
-      await Process.run(
-  'adb', 
-  <String>['shell', 'input', 'keyevent', 'KEYCODE_BACK'], 
-  runInShell: true,
-);  
+    await driver.waitFor(sysback);
+  await driver.tap(sysback);
+    });
 
+  final summary = new TimelineSummary.summarize(timeline);
+
+      // Then, save the summary to disk.
+      summary.writeSummaryToFile('scrolling_summary', pretty: true);
+
+      // Optionally, write the entire timeline to disk in a json format.
+      // This file can be opened in the Chrome browser's tracing tools
+      // found by navigating to chrome://tracing.
+      summary.writeTimelineToFile('scrolling_timeline', pretty: true);
 
 
 print("drawer befor login test passed..!!!");
@@ -144,6 +131,8 @@ print("drawer befor login test passed..!!!");
 
   test('login test..',() async {
   
+  await driver.waitFor(login);
+    await driver.tap(login);
         
     await driver.tap(guestbtn);
 
@@ -160,4 +149,8 @@ print("drawer befor login test passed..!!!");
   });
 
   });
+  
 }
+
+
+// flutter drive --target=test_driver/app.dart

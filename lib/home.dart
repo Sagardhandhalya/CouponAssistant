@@ -232,6 +232,7 @@
 
 
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -283,6 +284,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() { 
     super.initState();
+    _selections[0]=true;
     _messaging.configure(
       onLaunch : (Map<String ,dynamic> message) async {
         
@@ -406,7 +408,9 @@ class _HomeState extends State<Home> {
       });
     }
   }
+List<bool> _selections = List.generate(3, (_) => false);
 
+bool d = true;
   @override
   Widget build(BuildContext context) {
     _loaduser();
@@ -415,18 +419,6 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('General Coupon'),
         actions: <Widget>[
-          IconButton(
-            key: ValueKey("sort_button"),
-              icon: Icon(Icons.sort),
-              onPressed: () {
-                setState(() {
-                  if (sortby == "exp_date") {
-                    sortby = "discount";
-                  } else {
-                    sortby = "exp_date";
-                  }
-                });
-              }),
           IconButton(
             key: ValueKey("search_button"),
             icon: Icon(
@@ -440,33 +432,128 @@ class _HomeState extends State<Home> {
       ),
       drawer: isloggedin ? UserDrawer() : NormalDrawer(),
       body: StreamBuilder(
-        stream: Firestore.instance
-            .collection("general_coupons")
-            .orderBy(sortby, descending: false)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: spinkit,
+          stream: Firestore.instance
+              .collection("general_coupons")
+              .orderBy(sortby, descending: d)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+      child: spinkit,
+              );
+            }
+            return GridView.count(
+              // Create a grid with 2 columns. If you change the scrollDirection to
+              // horizontal, this produces 2 rows.
+              crossAxisCount: 2,
+              // Generate 100 widgets that display their index in the List.
+              children: List.generate(snapshot.data.documents.length, (index) {
+      return 
+      Hero (
+        tag : snapshot.data.documents[index].documentID,
+        child : _buildcoupon(context, snapshot.data.documents[index])
+        
+        );
+              }),
             );
-          }
-          return GridView.count(
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
-            crossAxisCount: 2,
-            // Generate 100 widgets that display their index in the List.
-            children: List.generate(snapshot.data.documents.length, (index) {
-              return 
-              Hero (
-                tag : snapshot.data.documents[index].documentID,
-                child : _buildcoupon(context, snapshot.data.documents[index])
-                
-                );
-            }),
-          );
-        },
+          },
+        ),
+        bottomNavigationBar: new BottomAppBar(
+        elevation: 5,
+        color: Colors.green[100],
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          
+          children: <Widget>[
+            Padding(
+            
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text("Sorted By",
+              style: TextStyle(
+                fontSize : 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.black
+
+              ),),
+            ),
+            
+             Container(
+               color: Colors.white,
+               
+               child: ToggleButtons(
+                 renderBorder: true,
+                 fillColor: Colors.white,
+                selectedColor: Colors.red,
+                borderWidth: 2,
+                 selectedBorderColor: Colors.green,
+                 borderRadius:BorderRadius.circular(10) ,
+                children: <Widget>[
+                  
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("discount",
+                   key: ValueKey("sort_button"),
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                     ),),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("Company",
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                     
+
+                ),),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(8.0),
+                   child: Text("Expairy date",
+                   style: TextStyle(
+                    fontSize : 15,
+                    fontWeight: FontWeight.bold,
+                    
+
+                ),),
+                 )
+                ],
+                isSelected: _selections,
+                onPressed: (int index) {
+                  
+                  setState(() {
+                   
+                    _selections[index] =true ;
+                    
+                    for(int i=0;i<3;i++)
+                    {
+                      if( i != index) _selections[i] = false ;
+                    }
+                      
+                      if(_selections[0]) 
+                      {sortby ="discount";
+                      d=true;
+                      }
+                      if(_selections[1])
+                      { sortby ="company";
+                        d=false;    
+                      }
+                      if(_selections[2]) 
+                      {sortby ="exp_date";
+                      d=false;
+                      }
+                    
+                  });
+                },
+            ),
+             )
+          ],
+        ),
       ),
+      
     );
+    
   }
 }
 

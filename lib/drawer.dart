@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import './services/sign_in.dart';
 import 'home.dart';
@@ -42,6 +43,42 @@ void initState() {
         name = nam;
       });
     }
+  }
+   void _showDialog() {
+   
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(15),
+            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          title: new Text("Sign out"),
+          content: new Text("Are you sure you want to SignOut ??"),
+          actions: <Widget>[
+           
+            new FlatButton(
+              child: new Text("Sign Out"),
+              onPressed: () {
+                signOutGoogle();
+                 Navigator.pushNamed(context, '/feed');
+              //Navigator.pushNamed(context, '/home');
+              Navigator.of(context)
+                  .push(new MaterialPageRoute(builder: (BuildContext context) {
+                return Home();
+              }));
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -112,14 +149,10 @@ void initState() {
               ),
             ),
             onTap: () {
-              signOutGoogle();
-
-              Navigator.pushNamed(context, '/feed');
-              //Navigator.pushNamed(context, '/home');
-              Navigator.of(context)
-                  .push(new MaterialPageRoute(builder: (BuildContext context) {
-                return Home();
-              }));
+                 Navigator.of(context).pop();
+              _showDialog();
+             
+             
             },
           ),
           ListTile(

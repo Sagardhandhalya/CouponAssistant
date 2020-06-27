@@ -125,10 +125,12 @@ class _LoginState extends State<Login> {
       splashColor: Colors.blue[50],
       onPressed: () {
         signInWithGoogle().whenComplete(() {
-          Navigator.of(context)
+         Navigator.of(context).pop();
+           Navigator.of(context)
               .push(new MaterialPageRoute(builder: (BuildContext context) {
             return Home();
-          }));
+           }
+          ));
         });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -162,10 +164,14 @@ class _LoginState extends State<Login> {
       key: ValueKey("guestbtn"),
       splashColor: Colors.blue[50],
       onPressed: () {
+        
+        Navigator.of(context).pop();
+         Navigator.of(context).pop();
         Navigator.of(context)
             .push(new MaterialPageRoute(builder: (BuildContext context) {
           return Home();
-        }));
+        }
+        ));
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
